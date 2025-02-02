@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Contact Manager</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            color: white;
+        }
+        .container {
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            margin: auto;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            color: black;
+        }
+        input, button {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        input {
+            border: 1px solid #ccc;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #218838;
+        }
+        .contact {
+            background: #f8f9fa;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .contact button {
+            width: auto;
+            background: #dc3545;
+            transition: 0.3s;
+        }
+        .contact button:hover {
+            background: #c82333;
+        }
+        .search {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Advanced Contact Manager</h2>
+        <input type="text" id="search" class="search" placeholder="Search Contacts" onkeyup="searchContact()">
+        <input type="text" id="name" placeholder="Enter Name">
+        <input type="text" id="phone" placeholder="Enter Phone">
+        <input type="text" id="email" placeholder="Enter Email">
+        <input type="text" id="company" placeholder="Enter Company">
+        <button onclick="addContact()">Add Contact</button>
+        <h3>Contacts</h3>
+        <div id="contacts"></div>
+    </div>
+
+    <script>
+        let contacts = [];
+
+        function addContact() {
+            let name = document.getElementById("name").value.trim();
+            let phone = document.getElementById("phone").value.trim();
+            let email = document.getElementById("email").value.trim();
+            let company = document.getElementById("company").value.trim();
+            
+            if (name && phone && email && company) {
+                let contact = { name, phone, email, company, created_at: new Date() };
+                contacts.push(contact);
+                displayContacts();
+                document.getElementById("name").value = "";
+                document.getElementById("phone").value = "";
+                document.getElementById("email").value = "";
+                document.getElementById("company").value = "";
+            }
+        }
+
+        function displayContacts() {
+            let contactsDiv = document.getElementById("contacts");
+            contactsDiv.innerHTML = "";
+            contacts.forEach((contact, index) => {
+                let contactDiv = document.createElement("div");
+                contactDiv.classList.add("contact");
+                contactDiv.innerHTML = `<span>${contact.name} - ${contact.phone} - ${contact.email} - ${contact.company}</span>
+                                       <button onclick="deleteContact(${index})">Delete</button>`;
+                contactsDiv.appendChild(contactDiv);
+            });
+        }
+
+        function deleteContact(index) {
+            contacts.splice(index, 1);
+            displayContacts();
+        }
+
+        function searchContact() {
+            let searchValue = document.getElementById("search").value.toLowerCase();
+            let filteredContacts = contacts.filter(contact => 
+                contact.name.toLowerCase().includes(searchValue) || 
+                contact.phone.includes(searchValue) ||
+                contact.email.toLowerCase().includes(searchValue) ||
+                contact.company.toLowerCase().includes(searchValue)
+            );
+            let contactsDiv = document.getElementById("contacts");
+            contactsDiv.innerHTML = "";
+            filteredContacts.forEach((contact, index) => {
+                let contactDiv = document.createElement("div");
+                contactDiv.classList.add("contact");
+                contactDiv.innerHTML = `<span>${contact.name} - ${contact.phone} - ${contact.email} - ${contact.company}</span>
+                                       <button onclick="deleteContact(${index})">Delete</button>`;
+                contactsDiv.appendChild(contactDiv);
+            });
+        }
+    </script>
+</body>
+</html>
